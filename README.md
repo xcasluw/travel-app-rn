@@ -6,4 +6,5 @@ App built using React Native (Expo), Typescript, Knex.js, Express
 
 Preview:
 
-<img src="screenshots/app1.jpg" width="100">
+<img src="screenshots/app1.jpg" width="400">
+<img src="screenshots/app2.jpg" width="400">
