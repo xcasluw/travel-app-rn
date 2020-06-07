@@ -1,6 +1,0 @@
-const { resolve } = require("path");
-
-module.exports = {
-  config: resolve(__dirname, "src", "config", "database.js"),
-  "models-pah": resolve(__dirname, "src", "app", "models")
-};

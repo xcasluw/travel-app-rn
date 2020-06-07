@@ -1,0 +1,55 @@
+import { Request, Response } from "express";
+import knex from "../database/connection";
+
+class QuestionsController {
+  async index(request: Request, response: Response) {
+    const questions = await knex("questions").select("*");
+    return response.json(questions);
+  }
+
+  async show(request: Request, response: Response) {
+    const { id } = request.params;
+    const question = await knex("questions").where("id", id).first();
+    if (!question) {
+      return response.status(400).json({ message: "Question not found" });
+    }
+
+    const serializedQuestion = {
+      ...question,
+      image_url: `http://192.168.0.109:3333/uploads/${question.image}`,
+    };
+
+    return response.json({ point: serializedQuestion });
+  }
+
+  async create(request: Request, response: Response) {
+    const {
+      title,
+      question_1,
+      question_2,
+      question_3,
+      question_4,
+    } = request.body;
+
+    const trx = await knex.transaction();
+
+    const question = {
+      image: request.file.filename,
+      title,
+      question_1,
+      question_2,
+      question_3,
+      question_4,
+    };
+
+    const insertedIds = await trx("questions").insert(question);
+    await trx.commit();
+
+    return response.json({
+      id: insertedIds,
+      ...question,
+    });
+  }
+}
+
+export default QuestionsController;

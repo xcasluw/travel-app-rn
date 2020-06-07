@@ -50,21 +50,21 @@ const Questions = () => {
             </Text>
 
             <CheckBox
-              title="Uma vez por ano"
+              title="Uma vez ao ano"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               checked={false}
             />
 
             <CheckBox
-              title="Até 3 vezes por ano"
+              title="Até 3 vezes ao ano"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               checked={false}
             />
 
             <CheckBox
-              title="Mais de 6 vezes por ano"
+              title="Mais de 6 vezes ao ano"
               checkedIcon="dot-circle-o"
               uncheckedIcon="circle-o"
               checked={false}
