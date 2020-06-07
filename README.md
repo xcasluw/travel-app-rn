@@ -6,6 +6,5 @@ App built using React Native (Expo), Typescript, Knex.js, Express
 
 Preview:
 
-![](screenshots/app1.jpg)
-
-![](screenshots/app2.jpg)
+<img src="screenshots/app1.jpg" width="400">
+<img src="screenshots/app2.jpg" width="400">
