@@ -5,8 +5,10 @@ import multer from "multer";
 import multerConfig from "./config/multer";
 
 import QuestionsController from "../src/controllers/QuestionsController";
+import OptionsController from "../src/controllers/OptionsController";
 
 const questionsController = new QuestionsController();
+const optionsController = new OptionsController();
 
 const routes = express.Router();
 const upload = multer(multerConfig);
@@ -20,10 +22,6 @@ routes.post(
     {
       body: Joi.object().keys({
         title: Joi.string().required(),
-        question_1: Joi.string().required(),
-        question_2: Joi.string().required(),
-        question_3: Joi.string().required(),
-        question_4: Joi.string().required(),
       }),
     },
     {
@@ -31,6 +29,22 @@ routes.post(
     }
   ),
   questionsController.create
+);
+routes.post(
+  "/options",
+  celebrate(
+    {
+      body: Joi.object().keys({
+        id_question: Joi.number().required(),
+        value: Joi.string().required(),
+        description: Joi.string().required(),
+      }),
+    },
+    {
+      abortEarly: false,
+    }
+  ),
+  optionsController.create
 );
 
 export default routes;

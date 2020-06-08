@@ -12,12 +12,13 @@ import {
 } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import api from "../../services/api";
 
 const Home = () => {
   const navigation = useNavigation();
 
-  function handleNavigateToQuiz() {
-    navigation.navigate("Questions");
+  function handleNavigateToQuiz(id: number) {
+    navigation.navigate("Questions", { question_id: id });
   }
 
   return (
@@ -41,7 +42,10 @@ const Home = () => {
         </View>
 
         <View style={styles.footer}>
-          <RectButton style={styles.button} onPress={handleNavigateToQuiz}>
+          <RectButton
+            style={styles.button}
+            onPress={() => handleNavigateToQuiz(1)}
+          >
             <View style={styles.buttonIcon}>
               <Text>
                 <Icon name="arrow-right" color="#FFF" size={24} />

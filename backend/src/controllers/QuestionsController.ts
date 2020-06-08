@@ -7,6 +7,25 @@ class QuestionsController {
     return response.json(questions);
   }
 
+  async create(request: Request, response: Response) {
+    const { title } = request.body;
+
+    const trx = await knex.transaction();
+
+    const question = {
+      image: request.file.filename,
+      title,
+    };
+
+    const insertedIds = await trx("questions").insert(question);
+    await trx.commit();
+
+    return response.json({
+      id: insertedIds,
+      ...question,
+    });
+  }
+
   async show(request: Request, response: Response) {
     const { id } = request.params;
     const question = await knex("questions").where("id", id).first();
@@ -19,36 +38,9 @@ class QuestionsController {
       image_url: `http://192.168.0.109:3333/uploads/${question.image}`,
     };
 
-    return response.json({ point: serializedQuestion });
-  }
+    const options = await knex("options").where("id_question", id).select("*");
 
-  async create(request: Request, response: Response) {
-    const {
-      title,
-      question_1,
-      question_2,
-      question_3,
-      question_4,
-    } = request.body;
-
-    const trx = await knex.transaction();
-
-    const question = {
-      image: request.file.filename,
-      title,
-      question_1,
-      question_2,
-      question_3,
-      question_4,
-    };
-
-    const insertedIds = await trx("questions").insert(question);
-    await trx.commit();
-
-    return response.json({
-      id: insertedIds,
-      ...question,
-    });
+    return response.json({ question: serializedQuestion, options });
   }
 }
 

@@ -13,9 +13,59 @@ import {
 } from "react-native";
 import { CheckBox } from "react-native-elements";
 import { RectButton } from "react-native-gesture-handler";
+import api from "../../services/api";
+
+interface Params {
+  question_id: number;
+}
+
+interface Data {
+  question: {
+    id: number;
+    image: string;
+    image_url: string;
+    title: string;
+  };
+  options: {
+    id: number;
+    id_question: number;
+    value: string;
+    description: string;
+  }[];
+}
 
 const Questions = () => {
+  const [data, setData] = useState<Data>({} as Data);
   const navigation = useNavigation();
+  const route = useRoute();
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const routeParams = route.params as Params;
+
+  useEffect(() => {
+    api.get(`questions/${routeParams.question_id}`).then((response) => {
+      setData(response.data);
+    });
+  }, [selectedItems]);
+
+  function handleSelectItem(id: number, idQuestion: number) {
+    const idSum = idQuestion + 1;
+
+    console.log(id, idQuestion);
+
+    setSelectedItems([...selectedItems, id]);
+
+    console.log(selectedItems);
+
+    if (idSum > 4) {
+      navigation.navigate("Recommendations", { userOptions: selectedItems });
+    } else {
+      navigation.navigate("Questions", { question_id: idSum });
+    }
+  }
+
+  if (!data.question) {
+    return null;
+  }
 
   function handleNavigateBack() {
     navigation.goBack();
@@ -31,51 +81,45 @@ const Questions = () => {
           <Icon name="x" size={20} style={styles.icon} />
         </TouchableOpacity>
 
-        <Text style={styles.title}>Questão 1 / 4</Text>
+        <Text style={styles.title}>Questão {data.question.id} / 4</Text>
         <ProgressBar
           style={{ marginTop: 5 }}
-          progress={0.25}
+          progress={data.question.id / 4}
           color={Colors.orange700}
         />
 
         <Image
-          style={styles.imageQuestion}
-          source={require("../../assets/viagem1.png")}
+          style={
+            data.question.image_url ===
+            "http://192.168.0.109:3333/uploads/da26f4850bd6-aviao2.png"
+              ? styles.imageQuestionAirplane
+              : data.question.image_url ===
+                "http://192.168.0.109:3333/uploads/4a81be06c361-praia1.png"
+              ? styles.imageQuestionBeach
+              : data.question.image_url ===
+                "http://192.168.0.109:3333/uploads/bac73b1c93b5-aviaopessoa.png"
+              ? styles.peopleAirplane
+              : styles.imageQuestion
+          }
+          source={{
+            uri: data.question.image_url,
+          }}
         />
 
-        <View style={styles.mapContainer}>
+        <View style={styles.questionContainer}>
           <View style={styles.questionInsideContainer}>
-            <Text style={styles.titleQuestion}>
-              Quantas viagens você costuma fazer por ano?
-            </Text>
+            <Text style={styles.titleQuestion}>{data.question.title}</Text>
 
-            <CheckBox
-              title="Uma vez ao ano"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checked={false}
-            />
-
-            <CheckBox
-              title="Até 3 vezes ao ano"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checked={false}
-            />
-
-            <CheckBox
-              title="Mais de 6 vezes ao ano"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checked={false}
-            />
-
-            <CheckBox
-              title="Uma vez a cada mês"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checked={false}
-            />
+            {data.options.map((option) => (
+              <TouchableOpacity
+                key={option.id}
+                style={styles.item}
+                onPress={() => handleSelectItem(option.id, option.id_question)}
+                activeOpacity={0.5}
+              >
+                <Text style={styles.description}>{option.description}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
           <RectButton style={styles.button} onPress={() => {}}>
             <Text style={styles.buttonText}>Próxima</Text>
@@ -91,6 +135,24 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 32,
     paddingTop: 20,
+  },
+
+  selectedItem: {
+    borderColor: "#6066D0",
+    borderWidth: 2,
+  },
+
+  item: {
+    backgroundColor: "#F5F5F5",
+    borderWidth: 2,
+    borderColor: "#E9E9E9",
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 16,
+    justifyContent: "space-between",
+    marginBottom: 10,
+    textAlign: "center",
   },
 
   avoid: {
@@ -115,12 +177,13 @@ const styles = StyleSheet.create({
 
   description: {
     color: "#6C6C80",
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: "600",
     marginTop: 4,
     fontFamily: "Roboto_400Regular",
   },
 
-  mapContainer: {
+  questionContainer: {
     flex: 1,
     width: "100%",
     borderRadius: 25,
@@ -138,6 +201,33 @@ const styles = StyleSheet.create({
     top: 125,
   },
 
+  imageQuestionAirplane: {
+    width: 200,
+    height: 200,
+    position: "absolute",
+    zIndex: 9999,
+    left: 30,
+    top: 95,
+  },
+
+  imageQuestionBeach: {
+    width: 110,
+    height: 110,
+    position: "absolute",
+    zIndex: 9999,
+    left: 50,
+    top: 120,
+  },
+
+  peopleAirplane: {
+    width: 130,
+    height: 130,
+    position: "absolute",
+    zIndex: 9999,
+    left: 50,
+    top: 105,
+  },
+
   questionInsideContainer: {
     padding: 20,
     marginTop: 70,
@@ -149,55 +239,6 @@ const styles = StyleSheet.create({
     color: "#000",
     fontFamily: "Ubuntu_700Bold",
     marginBottom: 30,
-  },
-
-  pointImage: {
-    width: "100%",
-    height: 120,
-    resizeMode: "cover",
-    borderRadius: 10,
-    marginTop: 32,
-  },
-
-  pointName: {
-    color: "#322153",
-    fontSize: 28,
-    fontFamily: "Ubuntu_700Bold",
-    marginTop: 24,
-  },
-
-  pointItems: {
-    fontFamily: "Roboto_400Regular",
-    fontSize: 16,
-    lineHeight: 24,
-    marginTop: 8,
-    color: "#6C6C80",
-  },
-
-  address: {
-    marginTop: 32,
-  },
-
-  addressTitle: {
-    color: "#322153",
-    fontFamily: "Roboto_500Medium",
-    fontSize: 16,
-  },
-
-  addressContent: {
-    fontFamily: "Roboto_400Regular",
-    lineHeight: 24,
-    marginTop: 8,
-    color: "#6C6C80",
-  },
-
-  footer: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderColor: "#999",
-    paddingVertical: 20,
-    paddingHorizontal: 32,
-    flexDirection: "row",
-    justifyContent: "space-between",
   },
 
   button: {
