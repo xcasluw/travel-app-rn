@@ -52,6 +52,10 @@ const Questions = () => {
     navigation.goBack();
   }
 
+  function goStart() {
+    navigation.navigate("Home");
+  }
+
   function handleSelectItem(id: number, idQuestion: number) {
     const alrearySelected = selectedItems.findIndex((item) => item === id);
     const idRoute = idQuestion + 1;
@@ -73,6 +77,20 @@ const Questions = () => {
   }
 
   if (!data.question) {
+    // return (
+    //   <View
+    //     style={{
+    //       flex: 1,
+    //       justifyContent: "center",
+    //       alignItems: "center",
+    //     }}
+    //   >
+    //     <Text style={styles.backOffline}>Backend Offline</Text>
+    //     <RectButton style={styles.buttonErr} onPress={goStart}>
+    //       <Text style={styles.buttonTextErr}>Voltar</Text>
+    //     </RectButton>
+    //   </View>
+    // );
     return null;
   }
 
@@ -96,13 +114,13 @@ const Questions = () => {
         <Image
           style={
             data.question.image_url ===
-            "http://192.168.0.109:3333/uploads/da26f4850bd6-aviao2.png"
+            "http://192.168.0.109:3333/uploads/b3f2d639f6fd-aviao2.png"
               ? styles.imageQuestionAirplane
               : data.question.image_url ===
-                "http://192.168.0.109:3333/uploads/4a81be06c361-praia1.png"
+                "http://192.168.0.109:3333/uploads/53125381aec5-praia1.png"
               ? styles.imageQuestionBeach
               : data.question.image_url ===
-                "http://192.168.0.109:3333/uploads/bac73b1c93b5-aviaopessoa.png"
+                "http://192.168.0.109:3333/uploads/1a9c51a4dd84-aviaopessoa.png"
               ? styles.peopleAirplane
               : styles.imageQuestion
           }
@@ -283,6 +301,28 @@ const styles = StyleSheet.create({
     marginLeft: -10,
     color: "#FFF",
     fontSize: 18,
+    fontFamily: "Ubuntu_700Bold",
+  },
+
+  backOffline: {
+    fontSize: 30,
+  },
+
+  buttonErr: {
+    width: "48%",
+    backgroundColor: "#FCA82F",
+    height: 50,
+    flexDirection: "row",
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+    borderRadius: 10,
+  },
+
+  buttonTextErr: {
+    color: "#FFF",
+    fontSize: 20,
     fontFamily: "Ubuntu_700Bold",
   },
 });
