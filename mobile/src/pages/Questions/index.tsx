@@ -36,6 +36,7 @@ interface Data {
 
 const Questions = () => {
   const [data, setData] = useState<Data>({} as Data);
+  const [idSum, setIdSum] = useState<number>(1);
   const navigation = useNavigation();
   const route = useRoute();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
@@ -45,17 +46,25 @@ const Questions = () => {
     api.get(`questions/${routeParams.question_id}`).then((response) => {
       setData(response.data);
     });
-  }, [selectedItems]);
+  }, [goNext]);
+
+  function handleNavigateBack() {
+    navigation.goBack();
+  }
 
   function handleSelectItem(id: number, idQuestion: number) {
-    const idSum = idQuestion + 1;
+    const alrearySelected = selectedItems.findIndex((item) => item === id);
+    const idRoute = idQuestion + 1;
+    if (alrearySelected >= 0) {
+      const filteredItems = selectedItems.filter((item) => item !== id);
+      setSelectedItems(filteredItems);
+    } else {
+      setSelectedItems([...selectedItems, id]);
+      setIdSum(idRoute);
+    }
+  }
 
-    console.log(id, idQuestion);
-
-    setSelectedItems([...selectedItems, id]);
-
-    console.log(selectedItems);
-
+  function goNext() {
     if (idSum > 4) {
       navigation.navigate("Recommendations", { userOptions: selectedItems });
     } else {
@@ -65,10 +74,6 @@ const Questions = () => {
 
   if (!data.question) {
     return null;
-  }
-
-  function handleNavigateBack() {
-    navigation.goBack();
   }
 
   return (
@@ -113,15 +118,27 @@ const Questions = () => {
             {data.options.map((option) => (
               <TouchableOpacity
                 key={option.id}
-                style={styles.item}
+                style={[
+                  styles.item,
+                  selectedItems.includes(option.id) ? styles.selectedItem : {},
+                ]}
                 onPress={() => handleSelectItem(option.id, option.id_question)}
                 activeOpacity={0.5}
               >
-                <Text style={styles.description}>{option.description}</Text>
+                <Text
+                  style={[
+                    styles.description,
+                    selectedItems.includes(option.id)
+                      ? styles.textSelectedItem
+                      : {},
+                  ]}
+                >
+                  {option.description}
+                </Text>
               </TouchableOpacity>
             ))}
           </View>
-          <RectButton style={styles.button} onPress={() => {}}>
+          <RectButton style={styles.button} onPress={goNext}>
             <Text style={styles.buttonText}>Próxima</Text>
           </RectButton>
         </View>
@@ -137,11 +154,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
 
-  selectedItem: {
-    borderColor: "#6066D0",
-    borderWidth: 2,
-  },
-
   item: {
     backgroundColor: "#F5F5F5",
     borderWidth: 2,
@@ -153,6 +165,25 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 10,
     textAlign: "center",
+  },
+
+  description: {
+    color: "#6C6C80",
+    fontSize: 14,
+    fontWeight: "600",
+    marginTop: 4,
+    fontFamily: "Roboto_500Medium",
+  },
+
+  selectedItem: {
+    borderColor: "#FCA82F",
+    borderWidth: 2,
+    backgroundColor: "#FCA82F",
+  },
+
+  textSelectedItem: {
+    color: "#fff",
+    fontFamily: "Roboto_500Medium",
   },
 
   avoid: {
@@ -173,14 +204,6 @@ const styles = StyleSheet.create({
 
   icon: {
     color: "#FCA82F",
-  },
-
-  description: {
-    color: "#6C6C80",
-    fontSize: 14,
-    fontWeight: "600",
-    marginTop: 4,
-    fontFamily: "Roboto_400Regular",
   },
 
   questionContainer: {

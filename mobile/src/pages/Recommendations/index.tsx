@@ -25,8 +25,6 @@ const Recommendations = () => {
     navigation.navigate("Home");
   }
 
-  console.log(routeParams);
-
   return (
     <KeyboardAvoidingView
       style={styles.avoid}
@@ -36,6 +34,18 @@ const Recommendations = () => {
         <TouchableOpacity style={styles.touchOp} onPress={handleNavigateBack}>
           <Icon name="x" size={20} style={styles.icon} />
         </TouchableOpacity>
+
+        <View style={styles.main}>
+          <Image
+            style={styles.imageLogo}
+            source={require("../../assets/loading.gif")}
+          />
+          <View>
+            <Text style={styles.description}>
+              Estamos procurando opções para sua próxima viagem ...
+            </Text>
+          </View>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -48,27 +58,21 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
 
-  selectedItem: {
-    borderColor: "#6066D0",
-    borderWidth: 2,
-  },
-
-  item: {
-    backgroundColor: "#F5F5F5",
-    borderWidth: 2,
-    borderColor: "#E9E9E9",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 16,
-    justifyContent: "space-between",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-
   avoid: {
     flex: 1,
-    backgroundColor: "#6066D0",
+    backgroundColor: "#FFF",
+  },
+
+  main: {
+    flex: 1,
+    justifyContent: "center",
+  },
+
+  imageLogo: {
+    width: 320,
+    height: 320,
+    marginTop: -90,
+    marginLeft: 10,
   },
 
   title: {
@@ -88,10 +92,10 @@ const styles = StyleSheet.create({
 
   description: {
     color: "#6C6C80",
-    fontSize: 14,
-    fontWeight: "600",
-    marginTop: 4,
-    fontFamily: "Roboto_400Regular",
+    fontSize: 20,
+    marginTop: 14,
+    fontFamily: "Ubuntu_700Bold",
+    textAlign: "center",
   },
 
   questionContainer: {
