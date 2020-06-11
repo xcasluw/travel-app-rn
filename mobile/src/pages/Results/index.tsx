@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,27 +12,26 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { Feather as Icon } from "@expo/vector-icons";
 import api from "../../services/api";
 
-interface Params {
-  userOptions: [0];
+interface Place {
+  id: number;
+  image: string;
+  title: string;
+  description: string;
 }
 
-const Recommendations = () => {
-  const route = useRoute();
-  const routeParams = route.params as Params;
-
+const Results = () => {
   const navigation = useNavigation();
+  const [places, setPlaces] = useState<Place>({} as Place);
 
   function handleNavigateBack() {
     navigation.navigate("Home");
   }
 
-  function handlePlaces() {
-    navigation.navigate("Results");
-  }
-
-  setTimeout(() => {
-    handlePlaces();
-  }, 5000);
+  useEffect(() => {
+    api.get(`places`).then((response) => {
+      setPlaces(response.data);
+    });
+  });
 
   return (
     <KeyboardAvoidingView
@@ -44,17 +43,7 @@ const Recommendations = () => {
           <Icon name="x" size={20} style={styles.icon} />
         </TouchableOpacity>
 
-        <View style={styles.main}>
-          <Image
-            style={styles.imageLogo}
-            source={require("../../assets/loading.gif")}
-          />
-          <View>
-            <Text style={styles.description}>
-              Estamos procurando opções para sua próxima viagem ...
-            </Text>
-          </View>
-        </View>
+        <Text style={styles.title}>Questão / 4</Text>
       </View>
     </KeyboardAvoidingView>
   );
@@ -65,6 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 32,
     paddingTop: 20,
+    backgroundColor: "aqua",
   },
 
   avoid: {
@@ -188,4 +178,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Recommendations;
+export default Results;

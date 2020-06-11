@@ -46,15 +46,9 @@ const Questions = () => {
     api.get(`questions/${routeParams.question_id}`).then((response) => {
       setData(response.data);
     });
-  }, [goNext]);
+  }, [selectedItems]);
 
-  function handleNavigateBack() {
-    navigation.goBack();
-  }
-
-  function goStart() {
-    navigation.navigate("Home");
-  }
+  // console.log(data);
 
   function handleSelectItem(id: number, idQuestion: number) {
     const alrearySelected = selectedItems.findIndex((item) => item === id);
@@ -66,14 +60,18 @@ const Questions = () => {
       setSelectedItems([...selectedItems, id]);
       setIdSum(idRoute);
     }
-  }
 
-  function goNext() {
     if (idSum > 4) {
       navigation.navigate("Recommendations", { userOptions: selectedItems });
     } else {
       navigation.navigate("Questions", { question_id: idSum });
     }
+  }
+
+  function goNext() {}
+
+  function goStart() {
+    navigation.navigate("Home");
   }
 
   if (!data.question) {
@@ -100,7 +98,7 @@ const Questions = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View style={styles.container}>
-        <TouchableOpacity style={styles.touchOp} onPress={handleNavigateBack}>
+        <TouchableOpacity style={styles.touchOp} onPress={goStart}>
           <Icon name="x" size={20} style={styles.icon} />
         </TouchableOpacity>
 

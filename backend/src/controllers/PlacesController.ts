@@ -45,12 +45,12 @@ class PlacesController {
       return response.status(400).json({ message: "Place not found" });
     }
 
-    const serializedQuestion = {
+    const serializedPlace = {
       ...place,
       image_url: `http://192.168.0.109:3333/uploads/${place.image}`,
     };
 
-    return response.json({ place: serializedQuestion });
+    return response.json({ place: serializedPlace });
   }
 }
 
