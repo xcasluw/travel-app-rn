@@ -4,9 +4,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import Home from "./pages/Home";
 import Questions from "./pages/Questions";
-import Recommendations from "./pages/Recommendations";
 import Results from "./pages/Results";
-import Finish from "./pages/Finish";
+import Detail from "./pages/Detail";
 
 const AppStack = createStackNavigator();
 
@@ -16,9 +15,8 @@ const Routes = () => {
       <AppStack.Navigator headerMode="none">
         <AppStack.Screen name="Home" component={Home} />
         <AppStack.Screen name="Questions" component={Questions} />
-        <AppStack.Screen name="Recommendations" component={Recommendations} />
         <AppStack.Screen name="Results" component={Results} />
-        <AppStack.Screen name="Finish" component={Finish} />
+        <AppStack.Screen name="Detail" component={Detail} />
       </AppStack.Navigator>
     </NavigationContainer>
   );

@@ -3,7 +3,19 @@ import knex from "../database/connection";
 
 class QuestionsController {
   async index(request: Request, response: Response) {
-    const questions = await knex("questions").select("*");
+    const questionsTable = await knex("questions").select("*");
+    const options = await knex("options").select("*");
+
+    const questions = questionsTable.map((question) => {
+      const result = options.filter(
+        (option) => option.id_question === question.id
+      );
+      return {
+        ...question,
+        options: result,
+      };
+    });
+
     return response.json(questions);
   }
 

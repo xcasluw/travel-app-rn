@@ -7,12 +7,9 @@ import {
   Text,
   Platform,
   KeyboardAvoidingView,
-  ImageBackground,
-  TextInput,
 } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
-import api from "../../services/api";
 
 const Home = () => {
   const navigation = useNavigation();
@@ -51,7 +48,7 @@ const Home = () => {
                 <Icon name="arrow-right" color="#FFF" size={24} />
               </Text>
             </View>
-            <Text style={styles.buttonText}>Começar Quiz</Text>
+            <Text style={styles.buttonText}>Começar</Text>
           </RectButton>
         </View>
       </View>

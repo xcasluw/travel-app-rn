@@ -11,8 +11,6 @@ import {
   Platform,
   Image,
 } from "react-native";
-import { CheckBox } from "react-native-elements";
-import { RectButton } from "react-native-gesture-handler";
 import api from "../../services/api";
 
 interface Params {
@@ -43,12 +41,14 @@ const Questions = () => {
   const routeParams = route.params as Params;
 
   useEffect(() => {
-    api.get(`questions/${routeParams.question_id}`).then((response) => {
-      setData(response.data);
-    });
-  }, [selectedItems]);
-
-  // console.log(data);
+    setTimeout(() => {
+      if (idSum <= 4) {
+        api.get(`questions/${idSum}`).then((response) => {
+          setData(response.data);
+        });
+      }
+    }, 500);
+  }, [idSum]);
 
   function handleSelectItem(id: number, idQuestion: number) {
     const alrearySelected = selectedItems.findIndex((item) => item === id);
@@ -60,15 +60,11 @@ const Questions = () => {
       setSelectedItems([...selectedItems, id]);
       setIdSum(idRoute);
     }
-
-    if (idSum > 4) {
-      navigation.navigate("Recommendations", { userOptions: selectedItems });
-    } else {
-      navigation.navigate("Questions", { question_id: idSum });
-    }
   }
 
-  function goNext() {}
+  if (idSum > 4) {
+    navigation.navigate("Results", { userOptions: selectedItems });
+  }
 
   function goStart() {
     navigation.navigate("Home");
@@ -97,9 +93,13 @@ const Questions = () => {
       style={styles.avoid}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
+      <Image
+        style={styles.closeIcon}
+        source={require("../../assets/close-icon-2.png")}
+      />
       <View style={styles.container}>
         <TouchableOpacity style={styles.touchOp} onPress={goStart}>
-          <Icon name="x" size={20} style={styles.icon} />
+          <Icon name="x" size={35} style={styles.icon} />
         </TouchableOpacity>
 
         <Text style={styles.title}>Questão {data.question.id} / 4</Text>
@@ -154,9 +154,6 @@ const Questions = () => {
               </TouchableOpacity>
             ))}
           </View>
-          <RectButton style={styles.button} onPress={goNext}>
-            <Text style={styles.buttonText}>Próxima</Text>
-          </RectButton>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -168,6 +165,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 32,
     paddingTop: 20,
+  },
+
+  closeIcon: {
+    position: "absolute",
+    width: 80,
+    height: 71,
+    top: 20,
   },
 
   item: {
@@ -219,7 +223,7 @@ const styles = StyleSheet.create({
   },
 
   icon: {
-    color: "#FCA82F",
+    color: "#FFF",
   },
 
   questionContainer: {
@@ -237,16 +241,17 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 9999,
     left: 60,
-    top: 125,
+    top: 142,
   },
 
   imageQuestionAirplane: {
     width: 200,
     height: 200,
+    transform: [{ rotate: "-15deg" }],
     position: "absolute",
     zIndex: 9999,
     left: 30,
-    top: 95,
+    top: 110,
   },
 
   imageQuestionBeach: {
@@ -255,7 +260,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 9999,
     left: 50,
-    top: 120,
+    top: 135,
   },
 
   peopleAirplane: {
@@ -264,7 +269,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 9999,
     left: 50,
-    top: 105,
+    top: 120,
   },
 
   questionInsideContainer: {
@@ -289,9 +294,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     bottom: -10,
-    right: -10,
+    right: 187,
     overflow: "hidden",
     borderRadius: 10,
+  },
+
+  noButton: {
+    display: "none",
   },
 
   buttonText: {
