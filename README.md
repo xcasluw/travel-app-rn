@@ -1,10 +1,9 @@
 # travel-app-rn
 
-Version: 0.1
+Version: 1.0
+App built using React Native (Expo), Typescript, Knex.js, Express 
 
-App built using React Native (Expo), Typescript, Knex.js, Express
-
-Preview:
+# Preview:
 
 <img src="screenshots/app1.jpg" width="300">
 <img src="screenshots/app2.jpg" width="300">
